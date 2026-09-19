@@ -8,7 +8,7 @@
     <!-- METATAGS PARA MINIATURA DE WHATSAPP -->
     <meta property="og:title" content="Mi Invitación">
     <meta property="og:description" content="¡Estás invitado a mis XV! Haz click para ver los detalles.">
-    <meta property="og:image" content="miniatura.jpg">
+    <meta property="og:image" content="portada.jpg">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="300">
     <meta property="og:image:height" content="300">
@@ -1045,7 +1045,21 @@
         return;
       }
 
-      const idEnvio = invitadoSeleccionado ? invitadoSeleccionado.nombre : nombreInput;
+      // Validar si el invitado existe exactamente en la lista global
+      let invitadoEncontrado = invitadoSeleccionado;
+      if (!invitadoEncontrado && listaInvitadosGlobal.length > 0) {
+        invitadoEncontrado = listaInvitadosGlobal.find(
+          inv => inv.nombre.trim().toLowerCase() === nombreInput.toLowerCase()
+        );
+      }
+
+      // Si el nombre no coincide con ningún invitado en la lista, mostrar error
+      if (!invitadoEncontrado) {
+        mostrarMensaje('Tu nombre no se encuentra en la lista de invitados. Por favor selecciona tu nombre de las sugerencias.');
+        return;
+      }
+
+      const idEnvio = invitadoEncontrado.nombre;
       const pasesAConfirmar = asistencia === 'Sí' ? 
         parseInt(document.getElementById('pasesConfirmados').value || 1) : 0;
 
@@ -1080,7 +1094,7 @@
               <div class="pase-adorno">✦</div>
               <div class="pase-titulo">Pase de Entrada</div>
               <div class="pase-linea"></div>
-              <div class="pase-nombre">${escapar(nombreInput)}</div>
+              <div class="pase-nombre">${escapar(idEnvio)}</div>
               <div class="pase-indicador">ACCESO INDIVIDUAL (${i} DE ${pasesAConfirmar})</div>
               <div class="pase-intransferible">
                 Este pase es intransferible, únicamente está destinado para uso de las personas invitadas al evento.
