@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mi Invitación</title>
+
+    <!-- METATAGS PARA MINIATURA DE WHATSAPP -->
+    <meta property="og:title" content="Mi Invitación">
+    <meta property="og:description" content="¡Estás invitado a mis XV! Haz click para ver los detalles.">
+    <meta property="og:image" content="portada.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Librería html2canvas para generación de imágenes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #F5F4F0;
+            font-family: 'Cinzel', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* MARCO DE CELULAR ADAPTABLE */
+        .mobile-screen {
+            width: 100%;
+            max-width: 430px;
+            height: 100vh;
+            height: 100dvh;
+            position: relative;
+            background-color: #F5F4F0;
+            box-shadow: 0 0 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* SCROLL INTERIOR SIN BARRA VISIBLE */
+        .invitation-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            background-color: #F5F4F0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .invitation-wrapper.open-portada {
+            opacity: 1;
+        }
+
+        .invitation-wrapper::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        /* ESTILOS DE IMÁGENES */
+        .image-section {
+            width: 100%;
+            background-color: #F5F4F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* PORTADA */
+        .portada-section {
+            min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+        }
+
+        .portada-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            transform: translateY(0);
+            transition: transform 1.8s ease-out, opacity 1.8s ease-out;
+        }
+
+        .open-portada .portada-section img {
+            opacity: 1;
+            animation: floatPortada 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatPortada {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-6px) scale(1.005); }
+        }
+
+        /* ESTILOS DEL CONTADOR */
+        .contador-section {
+            width: 100%;
+            padding: 30px 15px 40px 15px;
+            text-align: center;
+            background-color: #F5F4F0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .tiempo {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .unidad {
+            min-width: 70px;
+        }
+
+        .numero {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 50px;
+            line-height: 1;
+            color: #6F4E37;
+            font-weight: 600;
+        }
+
+        .texto {
+            margin-top: 7px;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #8B5A2B;
+        }
+
+        .separador {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            color: #A67B5B;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        /* SECCIÓN BOTÓN DE UBICACIÓN */
+        .location-button-section {
+            width: 100%;
+            padding: 15px 20px 45px 20px;
+            background-color: #F5F4F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-location {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #7E1D1E;
+            color: #F3E5AB;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: 1px solid #D4AF37;
+            box-shadow: 0 4px 15px rgba(126, 29, 30, 0.4), 0 0 20px rgba(126, 29, 30, 0.3);
+            animation: glowGlowRed 2.5s infinite alternate;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes glowGlowRed {
+            0% {
+                box-shadow: 0 4px 12px rgba(126, 29, 30, 0.4), 0 0 10px rgba(212, 175, 55, 0.2);
+            }
+            100% {
+                box-shadow: 0 6px 20px rgba(126, 29, 30, 0.8), 0 0 25px rgba(212, 175, 55, 0.5);
+            }
+        }
+
+        .btn-location:active {
+            transform: scale(0.96);
+        }
+
+        .btn-location svg {
+            width: 16px;
+            height: 16px;
+            fill: #F3E5AB;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+        }
+
+        /* SECCIÓN DE FORMULARIO DE ASISTENCIA */
+        .asistencia-form-section {
+            width: 100%;
+            padding: 10px 20px 60px 20px;
+            background-color: #F5F4F0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .tarjeta-asistencia {
+            background: rgba(255, 255, 255, .95);
+            border: 1px solid #c9a24e;
+            border-radius: 25px;
+            padding: 35px 28px;
+            box-shadow: 0 15px 45px rgba(90, 37, 37, .15);
+            position: relative;
+        }
+
+        .titulo-asistencia {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 38px;
+            color: #c9a24e;
+            margin: 0 0 6px;
+            font-weight: 700;
+        }
+
+        .subtitulo-asistencia {
+            text-align: center;
+            font-size: 13px;
+            color: #8c5d5d;
+            margin-bottom: 25px;
+            letter-spacing: 0.3px;
+            line-height: 1.4;
+        }
+
+        .grupo {
+            margin-bottom: 20px;
+            position: relative;
+            text-align: left;
+        }
+
+        .etiqueta {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            color: #c9a24e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 14px 15px;
+            border-radius: 12px;
+            border: 1px solid #d8c0ad;
+            background: #fffaf5;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            color: #5a2525;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #c9a24e;
+            box-shadow: 0 0 8px rgba(201, 162, 78, 0.3);
+        }
+
+        .lista-sugerencias {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #c9a24e;
+            border-radius: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: none;
+            margin-top: 5px;
+        }
+
+        .sugerencia-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 1px solid #f2ddd4;
+            transition: background 0.2s;
+            color: #5a2525;
+        }
+
+        .sugerencia-item:last-child {
+            border-bottom: none;
+        }
+
+        .sugerencia-item:hover {
+            background: #fcf3ed;
+            color: #9b2020;
+            font-weight: 600;
+        }
+
+        .info-pases {
+            display: none;
+            background: #fdf5f0;
+            border: 1px dashed #c9a24e;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #5a2525;
+        }
+
+        .info-pases span {
+            font-weight: 700;
+            color: #9b2020;
+            font-size: 16px;
+        }
+
+        .opciones {
+            display: flex;
+            gap: 12px;
+        }
+
+        .opcion {
+            flex: 1;
+        }
+
+        .opcion input {
+            display: none;
+        }
+
+        .opcion label {
+            display: block;
+            text-align: center;
+            padding: 13px 8px;
+            border: 1px solid #d8c0ad;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            background: #fffaf5;
+            transition: .2s;
+            color: #5a2525;
+        }
+
+        .opcion input:checked + label {
+            background: #9b2020;
+            border-color: #9b2020;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .bloque-cantidad {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .boton-confirmar {
+            width: 100%;
+            border: 0;
+            border-radius: 30px;
+            padding: 16px;
+            background: #9b2020;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(155, 32, 32, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .boton-confirmar:hover {
+            background: #801818;
+        }
+
+        .boton-confirmar:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .mensaje {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: #fff7f2;
+            border: 1px solid #d9bda8;
+            line-height: 1.5;
+            font-size: 13.5px;
+            color: #5a2525;
+        }
+
+        .mensaje.visible {
+            display: block;
+        }
+
+        .lista-pases {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .lista-pases.visible {
+            display: block;
+        }
+
+        .tarjeta-pase-individual {
+            margin-bottom: 30px;
+        }
+
+        .contenido-pase {
+            position: relative;
+            width: 100%;
+            padding: 35px 20px 25px;
+            text-align: center;
+            border: 2px solid #c9a24e;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #fffdf9 0%, #faf0e8 50%, #f3e3da 100%);
+            box-shadow: 0 10px 30px rgba(128, 72, 89, .12);
+        }
+
+        .pase-adorno {
+            font-size: 20px;
+            color: #c9a24e;
+            margin-bottom: 5px;
+        }
+
+        .pase-titulo {
+            font-family: 'Cormorant Garamond', serif;
+            color: #c9a24e;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0 0 10px;
+        }
+
+        .pase-linea {
+            width: 80px;
+            height: 1px;
+            background: #c9a24e;
+            margin: 0 auto 20px;
+        }
+
+        .pase-nombre {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: #5a2525;
+            margin: 10px 0 5px;
+            line-height: 1.2;
+        }
+
+        .pase-indicador {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 16px;
+            background: #9b2020;
+            color: #ffffff;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .pase-intransferible {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px dashed #d8c0ad;
+            font-size: 11px;
+            color: #8c5d5d;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .boton-descargar {
+            width: 100%;
+            border: 1px solid #c9a24e;
+            border-radius: 30px;
+            padding: 12px 20px;
+            margin-top: 12px;
+            background: #9b2020;
+            color: #fffaf2;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(120, 75, 35, .15);
+            transition: all .2s ease;
+        }
+
+        .boton-descargar:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 7px 18px rgba(120, 75, 35, .22);
+        }
+
+        /* ESTILOS DEL CARRUSEL DE FOTOS */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            border-radius: 0;
+        }
+
+        .slider-container img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            border-radius: 0;
+        }
+
+        .slider-container img.active {
+            opacity: 1;
+        }
+
+        /* ANIMACIÓN DE ENTRADA GENERAL AL HACER SCROLL */
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(40px) scale(0.97);
+            transition: opacity 1.4s ease-out, transform 1.4s ease-out;
+        }
+
+        .reveal-section.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* ANIMACIÓN ESPECIAL DE ENTRADA PARA LA GALERÍA Y CARRUSEL */
+        .gallery-reveal {
+            opacity: 0;
+            transform: translateY(60px) scale(0.88);
+            transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-reveal.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* SOBRE DE INVITACIÓN DE ALTURA COMPLETA */
+        .envelope-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            cursor: pointer;
+            perspective: 1200px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #F5F4F0;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('sobre.jpg');
+            background-size: cover;
+            background-position: center;
+            backface-visibility: hidden;
+            transition: transform 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .envelope-flap-top {
+            clip-path: polygon(0 0, 100% 0, 50% 50%);
+            transform-origin: top;
+            z-index: 5;
+        }
+
+        .envelope-flap-bottom {
+            clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+            transform-origin: bottom;
+            z-index: 3;
+        }
+
+        .envelope-flap-left {
+            clip-path: polygon(0 0, 0 100%, 50% 50%);
+            transform-origin: left;
+            z-index: 2;
+        }
+
+        .envelope-flap-right {
+            clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+            transform-origin: right;
+            z-index: 2;
+        }
+
+        /* BOTÓN EN EL SOBRE */
+        .center-group {
+            position: absolute;
+            top: 61.5%;
+            left: 66%;
+            transform: translate(-50%, -50%);
+            z-index: 6;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .view-text {
+            font-size: 11px;
+            color: #F3E5AB;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            background-color: #7E1D1E;
+            padding: 10px 22px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #D4AF37;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+        }
+
+        .open .envelope-flap-top { transform: rotateX(180deg); }
+        .open .envelope-flap-bottom { transform: rotateX(-180deg); }
+        .open .envelope-flap-left { transform: rotateY(-180deg); }
+        .open .envelope-flap-right { transform: rotateY(180deg); }
+
+        .open .center-group {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.85);
+            visibility: hidden;
+        }
+
+        .open.envelope-container {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 1.2s ease 1s, visibility 1.2s ease 1s;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="mobile-screen">
+
+    <!-- AUDIO CON EL NOMBRE 'cancion.mp3' -->
+    <audio id="bg-music" src="cancion.mp3" loop></audio>
+
+    <div class="invitation-wrapper" id="invitation">
+
+        <!-- 1. FOTO DE PORTADA -->
+        <div class="image-section portada-section">
+            <img src="portada.jpg" alt="Portada">
+        </div>
+
+        <!-- 2. FOTO DE FECHA -->
+        <div class="image-section reveal-section">
+            <img src="fecha.jpg" alt="Fecha">
+        </div>
+
+        <!-- 3. CONTADOR DE TIEMPO -->
+        <div class="contador-section reveal-section">
+            <div class="tiempo">
+                <div class="unidad">
+                    <div class="numero" id="dias">00</div>
+                    <div class="texto">Días</div>
+                </div>
+
+                <div class="separador">:</div>
+
+                <div class="unidad">
+                    <div class="numero" id="horas">00</div>
+                    <div class="texto">Horas</div>
+                </div>
+
+                <div class="separador">:</div>
+
+                <div class="unidad">
+                    <div class="numero" id="minutos">00</div>
+                    <div class="texto">Minutos</div>
+                </div>
+
+                <div class="separador">:</div>
+
+                <div class="unidad">
+                    <div class="numero" id="segundos">00</div>
+                    <div class="texto">Segundos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. FOTO Y UBICACIÓN DE CEREMONIA -->
+        <div class="image-section reveal-section">
+            <img src="ceremonia.jpg" alt="Ceremonia">
+        </div>
+
+        <div class="location-button-section reveal-section">
+            <a href="https://www.google.com/maps/place/Parroquia+Sagrado+Coraz%C3%B3n+de+Jes%C3%B3s/@23.2170682,-106.4167919,17z/data=!3m1!4b1!4m6!3m5!1s0x869f53a1aa5506cf:0xe7ac4599132eb4fc!8m2!3d23.2170682!4d-106.414217!16s%2Fg%2F1tfwdycd?entry=ttu&g_ep=EgoyMDI2MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn-location">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Ver ubicación
+            </a>
+        </div>
+
+        <!-- 5. FOTO Y UBICACIÓN DE RECEPCIÓN -->
+        <div class="image-section reveal-section">
+            <img src="recepcion.jpg" alt="Recepción">
+        </div>
+
+        <div class="location-button-section reveal-section">
+            <a href="https://www.google.com/maps/place/Amber+Salon+de+Eventos+Jard%C3%ADn/@23.2657692,-106.4029038,17z/data=!3m1!4b1!4m6!3m5!1s0x869f5300153c0437:0xda88b61c63563d25!8m2!3d23.2657692!4d-106.4003289!16s%2Fg%2F11m5j90y3c?entry=ttu&g_ep=EgoyMDI2MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn-location">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Ver ubicación
+            </a>
+        </div>
+
+        <!-- 6. IMAGEN DE GALERÍA DE FOTOS -->
+        <div class="image-section gallery-reveal">
+            <img src="galeria.jpg" alt="Galería de Fotos">
+        </div>
+
+        <!-- 7. CARRUSEL DE FOTOS NUEVAS -->
+        <div class="gallery-reveal">
+            <div class="slider-container">
+                <img src="https://i.imgur.com/4NYjYye.jpeg" class="active">
+                <img src="https://i.imgur.com/QIH0Gy9.jpeg">
+                <img src="https://i.imgur.com/o11na25.jpeg">
+                <img src="https://i.imgur.com/OST1M7N.jpeg">
+                <img src="https://i.imgur.com/WlXVrnq.jpeg">
+                <img src="https://i.imgur.com/F4BMtAq.jpeg">
+                <img src="https://i.imgur.com/VIO4RlW.jpeg">
+            </div>
+        </div>
+
+        <!-- 8. FOTO DE VESTIMENTA -->
+        <div class="image-section reveal-section">
+            <img src="vestimenta.jpg" alt="Vestimenta">
+        </div>
+
+        <!-- 9. FOTO DE REGALO -->
+        <div class="image-section reveal-section">
+            <img src="regalo.jpg" alt="Regalo">
+        </div>
+
+        <!-- 10. FOTO DE NIÑOS -->
+        <div class="image-section reveal-section">
+            <img src="ninos.jpg" alt="Niños">
+        </div>
+
+        <!-- 11. FOTO DE ASISTENCIA -->
+        <div class="image-section reveal-section">
+            <img src="asistencia.jpg" alt="Asistencia">
+        </div>
+
+        <!-- 12. FORMULARIO DE ASISTENCIA DINÁMICO CON BUSCADOR -->
+        <div class="asistencia-form-section reveal-section">
+            <div class="tarjeta-asistencia">
+                <h1 class="titulo-asistencia">Pase de Entrada</h1>
+                <div class="subtitulo-asistencia">Escribe tu nombre o el de tu familia para buscar tu pase</div>
+
+                <div class="grupo">
+                    <label class="etiqueta">Nombre completo / Familia</label>
+                    <input id="nombre" type="text" placeholder="Cargando lista..." disabled autocomplete="off" oninput="filtrarNombresLocalmente()">
+                    <div id="sugerencias" class="lista-sugerencias"></div>
+
+                    <div id="infoPases" class="info-pases">
+                        Tienes asignado(s): <span id="numPases">0</span> pase(s)
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label class="etiqueta">¿Asistirás al evento?</label>
+                    <div class="opciones">
+                        <div class="opcion">
+                            <input type="radio" name="asistencia" id="si" value="Sí" onchange="cambiarAsistencia(true)">
+                            <label for="si">Sí asistiré</label>
+                        </div>
+                        <div class="opcion">
+                            <input type="radio" name="asistencia" id="no" value="No" onchange="cambiarAsistencia(false)">
+                            <label for="no">No podré ir</label>
+                        </div>
+                    </div>
+
+                    <div id="bloqueCantidad" class="bloque-cantidad">
+                        <label class="etiqueta" style="font-size: 16px; margin-top: 15px;">¿Cuántos pases utilizarás?</label>
+                        <select id="pasesConfirmados"></select>
+                    </div>
+                </div>
+
+                <button class="boton-confirmar" id="boton" onclick="enviar()">Enviar respuesta</button>
+
+                <div id="mensaje" class="mensaje"></div>
+
+                <div id="listaPases" class="lista-pases"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SOBRE -->
+    <div class="envelope-container" id="envelope" onclick="openEnvelope()">
+        <div class="flap envelope-flap-top"></div>
+        <div class="flap envelope-flap-bottom"></div>
+        <div class="flap envelope-flap-left"></div>
+        <div class="flap envelope-flap-right"></div>
+
+        <div class="center-group">
+            <div class="view-text">
+                Ver invitación
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let isOpen = false;
+    const music = document.getElementById("bg-music");
+    const wrapper = document.getElementById("invitation");
+
+    function openEnvelope() {
+        if (!isOpen) {
+            isOpen = true;
+            document.getElementById("envelope").classList.add("open");
+            wrapper.classList.add("open-portada");
+            
+            var playPromise = music.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log("Reproducción bloqueada por el navegador:", error);
+                });
+            }
+
+            checkScroll();
+        }
+    }
+
+    function checkScroll() {
+        const reveals = document.querySelectorAll('.reveal-section, .gallery-reveal');
+        const triggerBottom = wrapper.clientHeight * 0.9;
+
+        reveals.forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top;
+            if (sectionTop < triggerBottom) {
+                section.classList.add('visible');
+            }
+        });
+    }
+
+    wrapper.addEventListener('scroll', checkScroll);
+
+    /* LÓGICA DEL CARRUSEL DE IMÁGENES */
+    const images = document.querySelectorAll('.slider-container img');
+    let current = 0;
+
+    setInterval(() => {
+        images[current].classList.remove('active');
+        current = (current + 1) % images.length;
+        images[current].classList.add('active');
+    }, 3000);
+
+    /* LÓGICA DEL CONTADOR DE TIEMPO: 19 DE OCTUBRE DE 2026, 5:00 PM (17:00 HRS) */
+    const fechaEvento = new Date("October 19, 2026 17:00:00").getTime();
+
+    function actualizarContador() {
+        const ahora = new Date().getTime();
+        const diferencia = fechaEvento - ahora;
+
+        if (diferencia <= 0) {
+            document.getElementById("dias").innerHTML = "00";
+            document.getElementById("horas").innerHTML = "00";
+            document.getElementById("minutos").innerHTML = "00";
+            document.getElementById("segundos").innerHTML = "00";
+            return;
+        }
+
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((diferencia % (1000 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+        document.getElementById("dias").innerHTML = String(dias).padStart(2, "0");
+        document.getElementById("horas").innerHTML = String(horas).padStart(2, "0");
+        document.getElementById("minutos").innerHTML = String(minutos).padStart(2, "0");
+        document.getElementById("segundos").innerHTML = String(segundos).padStart(2, "0");
+    }
+
+    actualizarContador();
+    setInterval(actualizarContador, 1000);
+
+    /* LÓGICA DE BÚSQUEDA Y CONFIRMACIÓN DE ASISTENCIA CON APPS SCRIPT */
+    const API_URL = "https://script.google.com/macros/s/AKfycbxHtPbd_WhcCPt-IB0lgIx94eCDL04dJAEc6FR5j_2bAQ4-v64y6zUUF-BsY-JeJEPV/exec";
+
+    let listaInvitadosGlobal = [];
+    let invitadoSeleccionado = null;
+
+    // Carga inicial de invitados desde Google Sheets
+    window.addEventListener('DOMContentLoaded', async () => {
+      const inputNombre = document.getElementById('nombre');
+      try {
+        const respuesta = await llamarAPI({ action: 'obtenerTodos' });
+        if (Array.isArray(respuesta) && respuesta.length > 0) {
+          listaInvitadosGlobal = respuesta;
+          inputNombre.placeholder = "Escribe para buscar...";
+        } else {
+          inputNombre.placeholder = "Escribe tu nombre completo...";
+        }
+      } catch (e) {
+        console.warn("No se pudo pre-cargar la lista desde la hoja:", e);
+        inputNombre.placeholder = "Escribe tu nombre completo...";
+      } finally {
+        inputNombre.disabled = false;
+      }
+    });
+
+    function llamarAPI(parametros) {
+      return new Promise((resolve, reject) => {
+        const callback = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
+        const script = document.createElement('script');
+        const query = new URLSearchParams({ ...parametros, callback });
+        const tiempo = setTimeout(() => { limpiar(); reject("Tiempo agotado"); }, 12000);
+
+        window[callback] = function(data) {
+          clearTimeout(tiempo);
+          limpiar();
+          resolve(data);
+        };
+
+        function limpiar() {
+          delete window[callback];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+
+        script.onerror = function() {
+          clearTimeout(tiempo);
+          limpiar();
+          reject("Error al conectar con la API");
+        };
+
+        script.src = API_URL + '?' + query.toString();
+        document.body.appendChild(script);
+      });
+    }
+
+    function filtrarNombresLocalmente() {
+      invitadoSeleccionado = null;
+      document.getElementById('infoPases').style.display = 'none';
+      document.getElementById('bloqueCantidad').style.display = 'none';
+
+      const query = document.getElementById('nombre').value.trim().toLowerCase();
+      const contenedorSugerencias = document.getElementById('sugerencias');
+
+      if (query.length < 2 || listaInvitadosGlobal.length === 0) {
+        contenedorSugerencias.style.display = 'none';
+        return;
+      }
+
+      const coincidencias = listaInvitadosGlobal.filter(inv => 
+        inv.nombre.toLowerCase().includes(query)
+      );
+
+      contenedorSugerencias.innerHTML = '';
+      if (coincidencias.length > 0) {
+        coincidencias.forEach(invitado => {
+          const item = document.createElement('div');
+          item.className = 'sugerencia-item';
+          item.textContent = invitado.nombre;
+          item.onclick = () => seleccionarInvitado(invitado);
+          contenedorSugerencias.appendChild(item);
+        });
+        contenedorSugerencias.style.display = 'block';
+      } else {
+        contenedorSugerencias.style.display = 'none';
+      }
+    }
+
+    function seleccionarInvitado(invitado) {
+      invitadoSeleccionado = invitado;
+      document.getElementById('nombre').value = invitado.nombre;
+      document.getElementById('sugerencias').style.display = 'none';
+
+      const infoPases = document.getElementById('infoPases');
+      const numPases = document.getElementById('numPases');
+      const maxPases = parseInt(invitado.pases) || 1;
+      
+      numPases.textContent = maxPases;
+      infoPases.style.display = 'block';
+
+      const select = document.getElementById('pasesConfirmados');
+      select.innerHTML = '';
+      for (let i = 1; i <= maxPases; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = i + (i === 1 ? ' pase' : ' pases');
+        if (i === maxPases) opt.selected = true;
+        select.appendChild(opt);
+      }
+
+      if (document.getElementById('si').checked) {
+        document.getElementById('bloqueCantidad').style.display = 'block';
+      }
+    }
+
+    function cambiarAsistencia(asistira) {
+      const bloque = document.getElementById('bloqueCantidad');
+      if (asistira && invitadoSeleccionado) {
+        bloque.style.display = 'block';
+      } else {
+        bloque.style.display = 'none';
+      }
+    }
+
+    async function enviar() {
+      const nombreInput = document.getElementById('nombre').value.trim();
+      const asistencia = document.querySelector('input[name="asistencia"]:checked')?.value;
+      const mensaje = document.getElementById('mensaje');
+      const listaPases = document.getElementById('listaPases');
+      const boton = document.getElementById('boton');
+
+      if (!nombreInput || !asistencia) {
+        mostrarMensaje('Por favor completa todos los campos.');
+        return;
+      }
+
+      const idEnvio = invitadoSeleccionado ? invitadoSeleccionado.nombre : nombreInput;
+      const pasesAConfirmar = asistencia === 'Sí' ? 
+        parseInt(document.getElementById('pasesConfirmados').value || 1) : 0;
+
+      boton.disabled = true;
+      boton.textContent = 'Procesando...';
+      mensaje.className = 'mensaje';
+      listaPases.className = 'lista-pases';
+      listaPases.innerHTML = '';
+
+      try {
+        await llamarAPI({
+          action: 'confirmar',
+          id: idEnvio,
+          asistencia: asistencia,
+          pasesConfirmados: pasesAConfirmar
+        });
+
+        if (asistencia === 'No') {
+          mostrarMensaje('Gracias por avisarnos. Lamentamos que no nos puedas acompañar.');
+          return;
+        }
+
+        mostrarMensaje('¡Gracias por confirmar! A continuación tienes tus pases individuales (En caso de llegar en diferente horario al evento)');
+        
+        listaPases.className = 'lista-pases visible';
+        
+        for (let i = 1; i <= pasesAConfirmar; i++) {
+          const divPase = document.createElement('div');
+          divPase.className = 'tarjeta-pase-individual';
+          divPase.innerHTML = `
+            <div id="contenidoPase_${i}" class="contenido-pase">
+              <div class="pase-adorno">✦</div>
+              <div class="pase-titulo">Pase de Entrada</div>
+              <div class="pase-linea"></div>
+              <div class="pase-nombre">${escapar(nombreInput)}</div>
+              <div class="pase-indicador">ACCESO INDIVIDUAL (${i} DE ${pasesAConfirmar})</div>
+              <div class="pase-intransferible">
+                Este pase es intransferible, únicamente está destinado para uso de las personas invitadas al evento.
+              </div>
+            </div>
+            <button type="button" class="boton-descargar" onclick="descargarPaseIndividual(${i}, event)">
+              Descargar Pase ${i} de ${pasesAConfirmar}
+            </button>
+          `;
+          listaPases.appendChild(divPase);
+        }
+
+      } catch (error) {
+        console.error(error);
+        mostrarMensaje('Ocurrió un error al registrar tu respuesta. Por favor intenta de nuevo.');
+      } finally {
+        boton.disabled = false;
+        boton.textContent = 'Enviar respuesta';
+      }
+    }
+
+    function mostrarMensaje(texto) {
+      const mensaje = document.getElementById('mensaje');
+      mensaje.className = 'mensaje visible';
+      mensaje.textContent = texto;
+    }
+
+    async function descargarPaseIndividual(numeroPase, ev) {
+      const contenido = document.getElementById('contenidoPase_' + numeroPase);
+      if (!contenido) return;
+
+      const btn = ev.target;
+      const textoOriginal = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Generando imagen...';
+
+      try {
+        const canvas = await html2canvas(contenido, {
+          scale: 3,
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          logging: false
+        });
+
+        canvas.toBlob(function(blob) {
+          if (!blob) throw new Error('Error al procesar la imagen.');
+          const url = URL.createObjectURL(blob);
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = 'Pase-' + obtenerNombreArchivo() + '-Pase' + numeroPase + '.png';
+          document.body.appendChild(enlace);
+          enlace.click();
+          document.body.removeChild(enlace);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }, 'image/png');
+
+      } catch (error) {
+        console.error(error);
+        alert('No se pudo descargar el pase. Puedes tomarle captura de pantalla.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = textoOriginal;
+      }
+    }
+
+    function obtenerNombreArchivo() {
+      const nombre = document.getElementById('nombre').value.trim();
+      return nombre.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 30) || 'Invitado';
+    }
+
+    function escapar(texto) {
+      return String(texto)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+</script>
+
+</body>
+</html>
